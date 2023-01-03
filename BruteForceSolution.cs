@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace Domino
 {
     /// <summary>
+    /// The first solution I came to
     /// Extremely complex solution O(N^N)
     /// </summary>
     class BruteForceSoulution : IDominoCircleMaker
@@ -25,11 +26,11 @@ namespace Domino
                 }
             }
 
-            var currentLine = stones[0];
+            var currentLine = new Stone(stones[0].Left, stones[0].Right);
             var ussedStones = new bool[stones.Length];
             ussedStones[0] = true;
 
-            var result = MakeCircleOfDominoRecursion(currentLine, stones, ussedStones, coutnsToChech, 1);
+            var result = MakeCircleOfDominoRecursion(currentLine, stones, ussedStones, 1);
             if (result != null)
             {
                 result.Add(stones[0]);
@@ -38,7 +39,7 @@ namespace Domino
             return result;
         }
 
-        List<Stone> MakeCircleOfDominoRecursion(Stone currentLine, Stone[] stones, bool[] ussedStones, int[] numbers, int depth)
+        List<Stone> MakeCircleOfDominoRecursion(Stone currentLine, Stone[] stones, bool[] ussedStones, int depth)
         {
             if (depth == stones.Length)
             {
@@ -60,28 +61,18 @@ namespace Domino
                         currentLine.Left = stones[i].Left;
                         ussedStones[i] = true;
                     }
-                    else if (stones[i].Left == currentLine.Right)
-                    {
-                        currentLine.Right = stones[i].Right;
-                        ussedStones[i] = true;
-                    }
-                    else if (stones[i].Right == currentLine.Right)
-                    {
-                        currentLine.Right = stones[i].Left;
-                        ussedStones[i] = true;
-                    }
+                    
                     if (ussedStones[i] == true)
                     {
-                        numbers[stones[i].Left] -= 1;
-                        numbers[stones[i].Right] -= 1;
-                        var result = MakeCircleOfDominoRecursion(currentLine, stones, ussedStones, numbers, depth + 1);
+                        var result = MakeCircleOfDominoRecursion(currentLine, stones, ussedStones, depth + 1);
 
                         if (result != null)
                         {
                             result.Add(stones[i]);
+                            return result;
                         }
 
-                        return result;
+                        ussedStones[i] = false;
                     }
                 }
             }
