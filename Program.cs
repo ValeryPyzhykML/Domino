@@ -8,32 +8,32 @@ namespace Domino
         {
             // Tests.TestAllCases(new BruteForceSoulution());
             // Tests.TestAllCases(new SolutionOne());
-            
-            var stones = Tests.GetRandomArrayOfDominoSonesWhichCanBeOrdered(4000);
-            var soulution = new SolutionOne();
-            var result = soulution.MakeCircleOfDomino(stones);
+            // Tests.TestAllCases(new SolutionTwo());
 
+            const int lengthOfSet = 40000000;
+            var stones = Utilities.GetRandomArrayOfDominoStonesWhichCanBeOrdered(lengthOfSet);
             Console.WriteLine("Random set of domino:");
-            foreach (var s in stones)
-            {
-                Console.Write("[{0}|{1}] ", s.Left, s.Right);
-               
-            }
-            Console.WriteLine();
+            Utilities.WriteDominoStones(stones);
+
+            var soulution = new SolutionTwo();
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            var result = soulution.MakeCircleOfDomino(stones);
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
 
             if (result != null)
             {
                 Console.WriteLine("Circle of domino is created:");
-                foreach (var s in result)
-                {
-                    Console.Write("[{0}|{1}] ", s.Right, s.Left);
-                }
-                Console.WriteLine();
+                Utilities.WriteDominoStones(result);
             }
             else
             {
                 Console.WriteLine("It's imposible to create a circle of domino from this set.");
             }
+
+          
+            Console.WriteLine("Execution time for set with {0} stones is {1} ms", lengthOfSet, elapsedMs);
         }
     }
 }

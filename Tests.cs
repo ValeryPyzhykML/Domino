@@ -1,50 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domino
 {
     public static class Tests
     {
-        public static Stone[] GetRandomArrayOfDominoSones(int count)
-        {
-            var rand = new Random();
-            var result = new Stone[count];
-            for (var i = 0; i < count; i++)
-            {
-                result[i] = new Stone(rand.Next(0, 6), rand.Next(0, 6));
-            }
-            return result;
-        }
-        public static Stone[] GetRandomArrayOfDominoSonesWhichCanBeOrdered(int count)
-        {
-            var rand = new Random();
-            var result = new Stone[count];
-            var first = rand.Next(0, 6);
-            var prev = first;
-            for (var i = 0; i < count - 1; i++)
-            {
-                result[i] = new Stone(prev, rand.Next(0, 6));
-                prev = result[i].Right;
-            }
-            result[count - 1] = new Stone(prev, first);
-
-
-            return result.OrderBy(x => rand.Next()).ToArray();
-        }
-
         public static void TestAllCases(IDominoCircleMaker dominoCircleMaker)
         {
+            // One symmetrical domino. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(4, 4) }, true);
+
+            // A few simple happy path tests. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 2), new Stone(2, 1) }, true);
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(1, 1) }, true);
 
+            // Odd amount of number repetitions. Imposible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 2), new Stone(2, 1), new Stone(3, 1) }, false);
 
+            // Disjoint sets. Imposible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 3), new Stone(2, 2) }, false);
+            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 2), new Stone(4,5), new Stone(5,4) }, false);
 
+            // Anoter random 5. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(6, 1), new Stone(5, 4), new Stone(5, 6), new Stone(4, 0) }, true);
             // Anoter random 20. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 1), new Stone(3, 3), new Stone(4, 3), new Stone(0, 0), new Stone(3, 3), new Stone(4, 0), new Stone(3, 2), new Stone(2, 0), new Stone(1, 0), new Stone(1, 4), new Stone(2, 1), new Stone(3, 2), new Stone(2, 3), new Stone(0, 1), new Stone(0, 2), new Stone(1, 0), new Stone(0, 1), new Stone(0, 3), new Stone(0, 0), new Stone(1, 4) }, true);
@@ -61,27 +37,23 @@ namespace Domino
         static void Test(IDominoCircleMaker circleMaker, Stone[] stones, bool expectedResult)
         {
             var result = circleMaker.MakeCircleOfDomino(stones);
-            bool isResultNull = result != null;
-            if (isResultNull == expectedResult)
+            bool isResult = result != null;
+
+            if (isResult == expectedResult)
             {
-                Console.WriteLine("OK result {0} == {1} expected result", isResultNull, expectedResult);
+                Console.WriteLine("OK result {0} == {1} expected result", isResult, expectedResult);
             }
             else
             {
-                Console.WriteLine("ERROR result {0} != {1} expected result", isResultNull, expectedResult);
+                Console.WriteLine("ERROR result {0} != {1} expected result", isResult, expectedResult);
             }
-            if (isResultNull)
+            if (isResult)
             {
                 if (result.Count != stones.Length)
                 {
                     Console.WriteLine("ERROR result length {0} != {1} expected result length", result.Count, stones.Length);
                 }
-
-                foreach (var s in result)
-                {
-                    Console.Write("[{0}|{1}] ", s.Right, s.Left);
-                }
-                Console.WriteLine();
+                Utilities.WriteDominoStones(result);
             }
             Console.WriteLine("==================================================================");
         }
