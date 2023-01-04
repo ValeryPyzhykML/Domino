@@ -6,6 +6,20 @@ namespace Domino
     {
         public static void TestAllCases(IDominoCircleMaker dominoCircleMaker)
         {
+            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 6), new Stone(6, 5), new Stone(5, 2), new Stone(0, 1), new Stone(0, 4), new Stone(1, 4) }, false);
+
+            // One symmetrical domino. Possible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
+            
+            // Circular pairs plus simetric. Possible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(3, 3), new Stone(3, 3), new Stone(3, 3), new Stone(3, 3), new Stone(2, 2), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
+
+            // Circular pairs plus simetric. Impossible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(4, 4), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, false);
+  
+
             // One symmetrical domino. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(4, 4) }, true);
 
@@ -19,6 +33,7 @@ namespace Domino
             // Disjoint sets. Imposible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 3), new Stone(2, 2) }, false);
             Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 2), new Stone(4,5), new Stone(5,4) }, false);
+            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 6), new Stone(6, 5), new Stone(5, 2), new Stone(0, 1), new Stone(0, 4), new Stone(1, 4) }, false);
 
             // Anoter random 5. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(6, 1), new Stone(5, 4), new Stone(5, 6), new Stone(4, 0) }, true);
@@ -46,6 +61,7 @@ namespace Domino
             else
             {
                 Console.WriteLine("ERROR result {0} != {1} expected result", isResult, expectedResult);
+                // throw new Exception("ERROR");
             }
             if (isResult)
             {

@@ -10,30 +10,32 @@ namespace Domino
             // Tests.TestAllCases(new SolutionOne());
             // Tests.TestAllCases(new SolutionTwo());
 
-            const int lengthOfSet = 40000000;
-            var stones = Utilities.GetRandomArrayOfDominoStonesWhichCanBeOrdered(lengthOfSet);
-            Console.WriteLine("Random set of domino:");
-            Utilities.WriteDominoStones(stones);
-
-            var soulution = new SolutionTwo();
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            var result = soulution.MakeCircleOfDomino(stones);
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-
-            if (result != null)
+            while (true)
             {
-                Console.WriteLine("Circle of domino is created:");
-                Utilities.WriteDominoStones(result);
-            }
-            else
-            {
-                Console.WriteLine("It's imposible to create a circle of domino from this set.");
-            }
+                const int lengthOfSet = 1000;
+                var stones = Utilities.GetRandomArrayOfDominoStonesWhichCanBeOrdered(lengthOfSet);
+                Console.WriteLine("Random set of domino:");
+                Utilities.WriteDominoStones(stones);
 
-          
-            Console.WriteLine("Execution time for set with {0} stones is {1} ms", lengthOfSet, elapsedMs);
+                var soulution = new SolutionTwo();
+
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var result = soulution.MakeCircleOfDomino(stones);
+                watch.Stop();
+                var elapsedMs = watch.ElapsedMilliseconds;
+
+                if (result != null)
+                {
+                    Console.WriteLine("Circle of domino is created:");
+                    Utilities.WriteDominoStones(result);
+                }
+                else
+                {
+                    Console.WriteLine("It's imposible to create a circle of domino from this set.");
+                }
+
+                Console.WriteLine("Execution time for set with {0} stones is {1} ms", lengthOfSet, elapsedMs);
+            }
         }
     }
 }

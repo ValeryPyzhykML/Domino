@@ -8,7 +8,7 @@ namespace Domino
     /// </summary>
     class BruteForceSoulution : IDominoCircleMaker
     {
-        public List<Stone> MakeCircleOfDomino(Stone[] stones)
+        public ICollection<Stone> MakeCircleOfDomino(Stone[] stones)
         {
             var coutnsToChech = new int[7];
             foreach (var s in stones)

@@ -4,6 +4,6 @@ namespace Domino
 {
     public interface IDominoCircleMaker
     {
-        List<Stone> MakeCircleOfDomino(Stone[] stones);
+        ICollection<Stone> MakeCircleOfDomino(Stone[] stones);
     }
 }
