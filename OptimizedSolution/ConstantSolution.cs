@@ -103,7 +103,7 @@ namespace Domino
                         result.Add((i, next));
                         return result;
                     }
-                    mat.Remove(next, i);
+                    mat.Add(next, i);
                 }
             }
 
