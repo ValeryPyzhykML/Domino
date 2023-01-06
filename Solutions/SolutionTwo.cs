@@ -47,24 +47,24 @@ namespace Domino
                 }
             }
 
-            var totoalRest = 0;
+            var totalRest = 0;
             for (var i = 0; i < matrix.GetLength(0); i++)
             {
                 for (var j = i + 1; j < matrix.GetLength(1); j++)
                 {
                     matrix[i, j] = matrix[i, j] % 2;
-                    totoalRest += matrix[i, j];
+                    totalRest += matrix[i, j];
                     maxtrixToInsertInTheEnd[i, j] -= matrix[i, j];
                 }
             }
 
             var results = new List<LinkedList<Stone>>();
-            while (totoalRest > 0)
+            while (totalRest > 0)
             {
                 var (firstI, firstJ) = GetFirstStone(matrix);
                 matrix[firstI, firstJ]--;
 
-                var result = MakeCircleOfDominoRecursive(matrix, firstI, firstJ, totoalRest - 1);
+                var result = MakeCircleOfDominoRecursive(matrix, firstI, firstJ, totalRest - 1);
 
                 if (result == null)
                 {
@@ -72,12 +72,12 @@ namespace Domino
                 }
 
                 result.AddLast(new Stone(firstI, firstJ));
-                totoalRest -= result.Count;
+                totalRest -= result.Count;
                 results.Add(result);
             }
 
             // Reconstruction of the whole deck.
-            return GenerateSequence(maxtrixToInsertInTheEnd, results);
+            return results.Any() ? GenerateSequence(maxtrixToInsertInTheEnd, results) : GenerateSequence(maxtrixToInsertInTheEnd);
         }
 
         private (int, int) GetFirstStone(int [,] mat)
@@ -127,42 +127,45 @@ namespace Domino
             return null;
         }
 
+        private LinkedList<Stone> GenerateSequence(int[,] mat)
+        {
+            var circularNests = new LinkedListNode<Stone>[7];
+            var result = new LinkedList<Stone>();
+
+            var (firstI, firstJ) = GetFirstStone(mat);
+            if (firstI > -1)
+            {
+                mat[firstI, firstJ] -= 2;
+                circularNests[firstJ] = result.AddLast(new Stone(firstI, firstJ));
+                circularNests[firstI] = result.AddLast(new Stone(firstJ, firstI));
+                AddPairsRecursive(result, circularNests, mat, firstI);
+                AddPairsRecursive(result, circularNests, mat, firstJ);
+            }
+            return result;
+        }
+
         private LinkedList<Stone> GenerateSequence(int[,] mat, List<LinkedList<Stone>> nonPairedCicles)
         {
             var result = new LinkedList<Stone>();
             var circularNests = new LinkedListNode<Stone>[7];
             var length = mat.GetLength(0);
 
-            if (!nonPairedCicles.Any())
-            {
-                var (firstI, firstJ) = GetFirstStone(mat);
-                if (firstI > -1)
-                {
-                    mat[firstI, firstJ] -= 2;
-                    circularNests[firstJ] = result.AddLast(new Stone(firstI, firstJ));
-                    circularNests[firstI] = result.AddLast(new Stone(firstJ, firstI));
-                    AddPairsRecursive(result, circularNests, mat, firstI);
-                    AddPairsRecursive(result, circularNests, mat, firstJ);
-                }
-            } else
-            {
-                var nonPaidCircle = nonPairedCicles.First(y => y.Count == nonPairedCicles.Max(x => x.Count));
-                nonPairedCicles.Remove(nonPaidCircle);
+            var nonPaidCircle = nonPairedCicles.First(y => y.Count == nonPairedCicles.Max(x => x.Count));
+            nonPairedCicles.Remove(nonPaidCircle);
 
-                foreach (var npc in nonPaidCircle)
+            foreach (var npc in nonPaidCircle)
+            {
+                var newNode = result.AddLast(npc);
+                if (circularNests[npc.Right] == null)
                 {
-                    var newNode = result.AddLast(npc);
-                    if (circularNests[npc.Right] == null)
-                    {
-                        circularNests[npc.Right] = newNode;
-                        AddPairsRecursive(result, circularNests, mat, npc.Right);
-                    }
+                    circularNests[npc.Right] = newNode;
+                    AddPairsRecursive(result, circularNests, mat, npc.Right);
                 }
             }
 
             while (nonPairedCicles.Any())
             {
-                var nonPaidCircle = nonPairedCicles.First(y => y.Count == nonPairedCicles.Max(x => x.Count));
+                nonPaidCircle = nonPairedCicles.First(y => y.Count == nonPairedCicles.Max(x => x.Count));
                 nonPairedCicles.Remove(nonPaidCircle);
 
                 var flag = false;

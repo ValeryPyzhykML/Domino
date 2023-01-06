@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domino.OptimizedSolution.Collections;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,14 @@ namespace Domino
 {
     static class Utilities
     {
+        public static void WriteDominoStones(IEnumerable<(byte, byte)> stones)
+        {
+            foreach (var s in stones)
+            {
+                Console.Write("[{0}|{1}] ", s.Item1, s.Item2);
+            }
+            Console.WriteLine();
+        }
         public static void WriteDominoStones(IEnumerable<Stone> stones)
         {
             foreach (var s in stones)
@@ -39,6 +48,17 @@ namespace Domino
             }
             return result;
         }
+
+        public static UnsortedStoneMatrix StonesToMatrix(Stone[] stones)
+        {
+            var matrix = new int[7, 7];
+            foreach (var s in stones)
+            {
+                matrix[Math.Min(s.Left, s.Right), Math.Max(s.Left, s.Right)]++;
+            }
+            return new UnsortedStoneMatrix(matrix);
+        }
+
         public static Stone[] GetRandomArrayOfDominoStonesWhichCanBeOrdered(int count)
         {
             var rand = new Random();

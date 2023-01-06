@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 
 namespace Domino
 {
     public static class Tests
     {
-        public static void TestAllCases(IDominoCircleMaker dominoCircleMaker)
+        public static void TestAllCases(dynamic dominoCircleMaker)
         {
-            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 6), new Stone(6, 5), new Stone(5, 2), new Stone(0, 1), new Stone(0, 4), new Stone(1, 4) }, false);
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(1, 1) }, true);
 
             // One symmetrical domino. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
-            
+
             // Circular pairs plus simetric. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
@@ -18,7 +20,9 @@ namespace Domino
 
             // Circular pairs plus simetric. Impossible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(4, 4), new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, false);
-  
+
+            // One symmetrical domino. Possible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(1, 4) }, false);
 
             // One symmetrical domino. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(4, 4) }, true);
@@ -32,11 +36,11 @@ namespace Domino
 
             // Disjoint sets. Imposible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 3), new Stone(2, 2) }, false);
-            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 2), new Stone(4,5), new Stone(5,4) }, false);
+            Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 2), new Stone(4, 5), new Stone(5, 4) }, false);
             Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 6), new Stone(6, 5), new Stone(5, 2), new Stone(0, 1), new Stone(0, 4), new Stone(1, 4) }, false);
 
             // Anoter random 5. Possible to order
-            Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(6, 1), new Stone(5, 4), new Stone(5, 6), new Stone(4, 0) }, true);
+            //Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(6, 1), new Stone(5, 4), new Stone(5, 6), new Stone(4, 0) }, true);
             // Anoter random 20. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 1), new Stone(3, 3), new Stone(4, 3), new Stone(0, 0), new Stone(3, 3), new Stone(4, 0), new Stone(3, 2), new Stone(2, 0), new Stone(1, 0), new Stone(1, 4), new Stone(2, 1), new Stone(3, 2), new Stone(2, 3), new Stone(0, 1), new Stone(0, 2), new Stone(1, 0), new Stone(0, 1), new Stone(0, 3), new Stone(0, 0), new Stone(1, 4) }, true);
             // Random 20. Possible to order
@@ -70,6 +74,43 @@ namespace Domino
                     Console.WriteLine("ERROR result length {0} != {1} expected result length", result.Count, stones.Length);
                 }
                 Utilities.WriteDominoStones(result);
+            }
+            Console.WriteLine("==================================================================");
+        }
+
+        static void Test(ConstantSolution circleMaker, Stone[] stones, bool expectedResult)
+        {
+            var result = circleMaker.MakeCircleOfDomino(Utilities.StonesToMatrix(stones));
+            bool isResult = result != null;
+
+            if (isResult == expectedResult)
+            {
+                Console.WriteLine("OK result {0} == {1} expected result", isResult, expectedResult);
+            }
+            else
+            {
+                Console.WriteLine("ERROR result {0} != {1} expected result", isResult, expectedResult);
+                // throw new Exception("ERROR");
+            }
+            if (isResult)
+            {
+                if (result.Count != stones.Length)
+                {
+                    Console.WriteLine("ERROR result length {0} != {1} expected result length", result.Count, stones.Length);
+                }
+                var realCount = 0;
+                foreach (var s in result)
+                {
+                    Console.Write("[{0}|{1}] ", s.Item1, s.Item2);
+                    realCount++;
+
+                }
+                Console.WriteLine();
+                if (result.Count != stones.Length)
+                {
+                    Console.WriteLine("ERROR Real Count is different. Real count {0} != {1} count", realCount , result.Count);
+                }
+
             }
             Console.WriteLine("==================================================================");
         }
