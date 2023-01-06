@@ -163,23 +163,23 @@ namespace Domino
             var result = new CircularStoneArray();
             var circularNests = new LinkedListNode<Stone>[7];
 
-            var flag = true;
-            while (nonPairedCicles.Any() && flag)
+            while (nonPairedCicles.Any())
             {
-                var nonPaidCircle = nonPairedCicles.First(y => y.Count == nonPairedCicles.Max(x => x.Count));
-                nonPairedCicles.Remove(nonPaidCircle);
-
-                flag &= result.AddAciclicSequence(nonPaidCircle);
-
-                foreach (var npc in nonPaidCircle)
+                var nonPaidCircle = nonPairedCicles.FirstOrDefault(y => result.AddAciclicSequence(y));
+                if (nonPaidCircle == null)
                 {
-                    AddPairsRecursive(result, mat, npc.Item2);
+                    return null;
                 }
-            }
 
-            if (!flag)
-            {
-                return null;
+                nonPairedCicles.Remove(nonPaidCircle);
+                
+                if (mat.Count > 0)
+                {
+                    foreach (var npc in nonPaidCircle)
+                    {
+                        AddPairsRecursive(result, mat, npc.Item2);
+                    }
+                }
             }
 
             // Generate Simetrical Stones

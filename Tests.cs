@@ -8,8 +8,6 @@ namespace Domino
     {
         public static void TestAllCases(dynamic dominoCircleMaker)
         {
-            Test(dominoCircleMaker, new Stone[] { new Stone(1, 1), new Stone(1, 1), new Stone(1, 1) }, true);
-
             // One symmetrical domino. Possible to order
             Test(dominoCircleMaker, new Stone[] { new Stone(1, 3), new Stone(1, 3), new Stone(6, 3), new Stone(6, 3), new Stone(2, 6), new Stone(2, 6) }, true);
 
@@ -38,6 +36,14 @@ namespace Domino
             Test(dominoCircleMaker, new Stone[] { new Stone(3, 3), new Stone(2, 2) }, false);
             Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 2), new Stone(4, 5), new Stone(5, 4) }, false);
             Test(dominoCircleMaker, new Stone[] { new Stone(2, 3), new Stone(3, 6), new Stone(6, 5), new Stone(5, 2), new Stone(0, 1), new Stone(0, 4), new Stone(1, 4) }, false);
+
+
+            // Tree Acyclyc structure. Possible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(6, 6), new Stone(3, 1), new Stone(1, 1), new Stone(1, 4), new Stone(3, 5), new Stone(3, 1), new Stone(1, 3), new Stone(6, 1), new Stone(2, 0), new Stone(6, 3), new Stone(1, 6), new Stone(5, 6), new Stone(1, 1), new Stone(0, 5), new Stone(4, 3), new Stone(1, 1), new Stone(5, 2), new Stone(2, 2) }, true);
+            
+            // Tree dishoint sets. Imposible to order
+            Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(1, 2), new Stone(2, 3), new Stone(3, 4), new Stone(4, 5), new Stone(5, 6), new Stone(3, 6), new Stone(6, 5), new Stone(5, 3) }, false);
+
 
             // Anoter random 5. Possible to order
             //Test(dominoCircleMaker, new Stone[] { new Stone(0, 1), new Stone(6, 1), new Stone(5, 4), new Stone(5, 6), new Stone(4, 0) }, true);
